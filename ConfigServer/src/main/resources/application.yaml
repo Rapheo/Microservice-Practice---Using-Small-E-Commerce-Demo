@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: Config-Server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/Rapheo/spring-app-config
+
+server:
+  port: 9296
+
