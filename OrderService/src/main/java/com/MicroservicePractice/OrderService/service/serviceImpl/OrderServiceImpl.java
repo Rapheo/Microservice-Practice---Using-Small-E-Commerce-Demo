@@ -1,7 +1,9 @@
 package com.MicroservicePractice.OrderService.service.serviceImpl;
 
 import com.MicroservicePractice.OrderService.entity.Order;
+import com.MicroservicePractice.OrderService.external.client.PaymentService;
 import com.MicroservicePractice.OrderService.external.client.ProductService;
+import com.MicroservicePractice.OrderService.external.request.PaymentRequest;
 import com.MicroservicePractice.OrderService.model.OrderRequest;
 import com.MicroservicePractice.OrderService.repository.OrderRepository;
 import com.MicroservicePractice.OrderService.service.OrderService;
@@ -21,6 +23,9 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private PaymentService paymentService;
+
     @Override
     public long placeOrder(OrderRequest orderRequest) {
         log.info("Placing Order Request: " + orderRequest);
@@ -37,6 +42,27 @@ public class OrderServiceImpl implements OrderService {
                 .quantity(orderRequest.getQuantity())
                 .build();
 
+        order = orderRepository.save(order);
+
+        log.info("Calling Payment Service to complete the payment");
+        PaymentRequest paymentRequest
+                = PaymentRequest.builder()
+                .orderId(order.getId())
+                .paymentMode(orderRequest.getPaymentMode())
+                .amount(orderRequest.getTotalAmount())
+                .build();
+
+        String orderStatus = null;
+        try {
+            paymentService.doPayment(paymentRequest);
+            log.info("Payment done Successfully. Changing the Order Status to PAID");
+            orderStatus = "PLACED";
+        }catch (Exception ex){
+            log.info("Error during Payment. Changing the Order Status to PAYMENT_FAILED");
+            orderStatus = "PAYMENT_FAILED";
+        }
+
+        order.setOrderStatus(orderStatus);
         order = orderRepository.save(order);
 
         log.info("Order Placed successfully with Order Id: {} ", order.getId());
