@@ -23,6 +23,34 @@ spring:
               args:
                 redis-rate-limiter.replenishRate: 1
                 redis-rate-limiter-burstCapacity: 1
+
+        - id: PAYMENT-SERVICE
+          uri: lb://PAYMENT-SERVICE
+          predicates:
+            - Path=/payment/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: PAYMENT-SERVICE
+                fallbackuri: forward:/paymentServiceFallBack
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 1
+                redis-rate-limiter-burstCapacity: 1
+
+        - id: PRODUCT-SERVICE
+          uri: lb://PRODUCT-SERVICE
+          predicates:
+            - Path=/product/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: PRODUCT-SERVICE
+                fallbackuri: forward:/productServiceFallBack
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 1
+                redis-rate-limiter-burstCapacity: 1
   security:
     oauth2:
       client:
@@ -38,5 +66,6 @@ spring:
             issuer-uri: https://dev-3ipx01b1.auth0.com/
             jwk-set-uri: https://dev-3ipx01b1.auth0.com/.well-known/jwks.json
 
-  auth0:
-    audience: https://dev-3ipx01b1.auth0.com/api/v2/
+
+auth0:
+  audience: https://dev-3ipx01b1.auth0.com/api/v2/

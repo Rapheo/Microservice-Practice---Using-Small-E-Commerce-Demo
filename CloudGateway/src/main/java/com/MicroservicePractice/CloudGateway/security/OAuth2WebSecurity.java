@@ -21,7 +21,7 @@ public class OAuth2WebSecurity {
 
     private final org.springframework.cloud.client.circuitbreaker.Customizer customizer;
 
-    @Value("${auth0/audience}")
+    @Value("${auth0.audience}")
     private String audience;
 
     private final ReactiveClientRegistrationRepository clientRegistrationRepository;
