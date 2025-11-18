@@ -9,6 +9,8 @@ spring:
     import: configserver:http://localhost:9296
   cloud:
     gateway:
+      default-filters:
+        - name: TokenRelay
       routes:
         - id : ORDER-SERVICE
           uri: lb://ORDER-SERVICE
@@ -65,6 +67,9 @@ spring:
           auth0:
             issuer-uri: https://dev-3ipx01b1.auth0.com/
             jwk-set-uri: https://dev-3ipx01b1.auth0.com/.well-known/jwks.json
+      resourceserver:
+        jwt:
+          issuer-uri: https://dev-3ipx01b1.auth0.com/
 
 
 auth0:
