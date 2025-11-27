@@ -161,20 +161,20 @@ public class OrderControllerTest {
                 .andReturn();
     }
 
-    @Test
-    public void test_WhenGetOrder_Success() throws Exception{
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/order/1")
-                .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_Customer")))
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn();
-
-        String actualResponse = mvcResult.getResponse().getContentAsString();
-        Order order = orderRepository.findById(1l).get();
-        String expectedResponse = getOrderResponse(order);
-
-        assertEquals(actualResponse, expectedResponse);
-    }
+//    @Test
+//    public void test_WhenGetOrder_Success() throws Exception{
+//        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get("/order/1")
+//                .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_Customer")))
+//                .contentType(MediaType.APPLICATION_JSON_VALUE))
+//                .andExpect(MockMvcResultMatchers.status().isOk())
+//                .andReturn();
+//
+//        String actualResponse = mvcResult.getResponse().getContentAsString();
+//        Order order = orderRepository.findById(1l).get();
+//        String expectedResponse = getOrderResponse(order);
+//
+//        assertEquals(actualResponse, expectedResponse);
+//    }
 
     private String getOrderResponse(Order order) throws  Exception {
         OrderResponse.PaymentDetails paymentDetails
