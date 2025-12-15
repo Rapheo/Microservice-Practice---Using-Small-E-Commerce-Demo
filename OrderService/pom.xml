@@ -11,6 +11,7 @@
 	<groupId>com.MicroservicePractice</groupId>
 	<artifactId>OrderService</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
 	<name>OrderService</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
@@ -110,12 +111,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-oauth2-client</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.MicroservicePractice</groupId>
-            <artifactId>ProductService</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.MicroservicePractice</groupId>-->
+<!--            <artifactId>ProductService</artifactId>-->
+<!--            <version>0.0.1-SNAPSHOT</version>-->
+<!--            <scope>compile</scope>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
