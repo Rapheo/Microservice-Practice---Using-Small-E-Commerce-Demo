@@ -14,16 +14,16 @@ spec:
         app: config-server-app
     spec:
       containers:
-      - name: config-server-app
-        image: arapheo/config-server
-        ports:
-        - containerPort: 9296
-        env:
-         - name: EURELA_SERVER_ADDRESS
-           valueFrom:
-            configMapKeyRef:
-              key: eureka_service_address
-              name: eureka-cm
+        - name: config-server-app
+          image: arapheo/config-server
+          ports:
+            - containerPort: 9296
+          env:
+          - name: EUREKA_SERVER_ADDRESS
+            valueFrom:
+              configMapKeyRef:
+                key: eureka_service_address
+                name: eureka-cm
 
 ---
 

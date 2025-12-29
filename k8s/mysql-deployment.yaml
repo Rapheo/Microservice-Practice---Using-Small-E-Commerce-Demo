@@ -1,11 +1,6 @@
-# PV
-# PVC
-# StatefulSet - Mysql
-# Headless
-# Config
-
----
-
+# =====================
+# Persistent Volume
+# =====================
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -17,67 +12,29 @@ spec:
     - ReadWriteOnce
   storageClassName: manual
   hostPath:
-    path: "E:/personal_hub/Microservice-Practice/Kubernetes-pv-storage"
+    path: "/run/desktop/mnt/host/c/temp/testfiles"
     type: DirectoryOrCreate
 
-
 ---
-
+# =====================
+# Persistent Volume Claim
+# =====================
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: mysql-pvc
 spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: manual
   resources:
     requests:
       storage: 1Gi
-  storageClassName: manual
-  accessModes:
-    - ReadWriteOnce
-
 
 ---
-
-apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  name: mysql
-spec:
-  selector:
-    matchLabels:
-      app: mysql
-  serviceName: mysql
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: mysql
-    spec:
-      containers:
-      - name: mysql
-        image: mysql:8.0
-        ports:
-        - containerPort: 3306
-          name: mysql
-        env:
-         - name: MYSQL_ROOT_PASSWORD
-           value: root
-        volumeMounts:
-        - name: mysql-persistent-storage
-          mountPath: /var/lib/mysql
-    volumes:
-      - name: mysql-initdb
-        mountPath: /docker-entrypoint-initdb.d
-      - name: mysql-persistent-storage
-        persistentVolumeClaim:
-          claimName: mysql-pvc
-      - name: mysql-initdb
-        configMap:
-          name: mysql-initdb-cm 
-
-
----
-
+# =====================
+# ConfigMap (Init DB)
+# =====================
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -88,10 +45,51 @@ data:
     CREATE DATABASE IF NOT EXISTS paymentdb;
     CREATE DATABASE IF NOT EXISTS productdb;
 
-
+---
+# =====================
+# StatefulSet - MySQL
+# =====================
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql
+spec:
+  serviceName: mysql
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:8.0
+          ports:
+            - containerPort: 3306
+              name: mysql
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: root
+          volumeMounts:
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql
+            - name: mysql-initdb
+              mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-pvc
+        - name: mysql-initdb
+          configMap:
+            name: mysql-initdb-cm
 
 ---
-
+# =====================
+# Headless Service
+# =====================
 apiVersion: v1
 kind: Service
 metadata:
@@ -101,4 +99,5 @@ spec:
   selector:
     app: mysql
   ports:
-  - port: 3306
+    - port: 3306
+      targetPort: 3306

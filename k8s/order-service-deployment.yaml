@@ -12,26 +12,26 @@ spec:
         app: order-service-app
     spec:
       containers:
-      - name: order-service-app
-        image: arapheo/order-service
-        ports:
-        - containerPort: 8082
-        env:
-          - name: EURELA_SERVER_ADDRESS
-            valueFrom:
-            configMapKeyRef:
-              key: eureka_service_address
-              name: eureka-cm
-          - name: CONFIG_SERVER_URL
-            valueFrom:
-            configMapKeyRef:
-              key: config_url
-              name: config-cm
-          - name: DB_HOST
-            valueFrom:
-            configMapKeyRef:
-              key: hostname
-              name: mysql-cm
+        - name: order-service-app
+          image: arapheo/order-service
+          ports:
+            - containerPort: 8082
+          env:
+            - name: EUREKA_SERVER_ADDRESS
+              valueFrom:
+                configMapKeyRef:
+                  key: eureka_service_address
+                  name: eureka-cm
+            - name: CONFIG_SERVER_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: config_url
+                  name: config-cm
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  key: hostname
+                  name: mysql-cm
 ---
 
 apiVersion: v1

@@ -12,10 +12,10 @@ spec:
         app: zipkin
     spec:
       containers:
-      - name: zipkin
-        image: openzipkin/zipkin
-        ports:
-        - containerPort: 9411
+        - name: zipkin
+          image: openzipkin/zipkin
+          ports:
+            - containerPort: 9411
 
 
 ---
