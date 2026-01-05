@@ -1,5 +1,9 @@
 package com.MicroservicePractice.CloudGateway.security;
 
+import java.util.Collection;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,10 +19,6 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverterAdapter;
 import org.springframework.security.web.server.SecurityWebFilterChain;
-
-import java.util.Collection;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebFluxSecurity
@@ -40,6 +40,8 @@ public class OAuth2WebSecurity {
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         http
+                // .csrf(ServerHttpSecurity.CsrfSpec::disable) 
+                // .authorizeExchange(ex -> ex.anyExchange().permitAll()
                 .authorizeExchange(authorizeExchangeBuilder ->
                         authorizeExchangeBuilder.anyExchange().authenticated())
                 .oauth2Login(oAuth2LoginSpec ->

@@ -1,6 +1,16 @@
 server:
   port: 9090
 
+management:
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0
+
+  zipkin:
+    tracing:
+      endpoint: http://zipkin-svc:9411/api/v2/spans
+
 eureka:
   client:
     service-url:
@@ -52,6 +62,10 @@ spring:
           predicates:
             - Path=/product/**
           filters:
+            - name: RewritePath
+              args:
+                regexp: /product/(?<remaining>.*)
+                replacement: /product/${remaining}
             - name: CircuitBreaker
               args:
                 name: PRODUCT-SERVICE
@@ -60,6 +74,8 @@ spring:
               args:
                 redis-rate-limiter.replenishRate: 1
                 redis-rate-limiter-burstCapacity: 1
+
+
   security:
     oauth2:
       client:
